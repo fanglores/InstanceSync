@@ -125,9 +125,8 @@ public class DownloadManager {
 		
 		String name = file.getName();
 		
-		if(name.endsWith(".disabled"))
-			return swapIfExists(file, name.replaceAll("\\.disabled", ""));
-		else return swapIfExists(file, name + ".disabled");
+		if(!name.endsWith(".disabled"))
+			return swapIfExists(file, name + ".disabled");
 	}
 	
 	private boolean swapIfExists(File target, String searchName) {
