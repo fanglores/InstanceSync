@@ -13,17 +13,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
 
-      - name: Build
-        run: mvn -B package --file pom.xml
+      - name: Compile all Java sources
+        run: |
+          mkdir -p out
+          javac -d out $(find . -name "*.java")
 
-      - name: Upload JAR artifact
+      - name: Create JAR with correct Main-Class
+        run: |
+          mkdir -p jar
+          echo "Main-Class: vazkii.instancesync.InstanceSync" > manifest.txt
+          jar cfm jar/InstanceSync.jar manifest.txt -C out .
+
+      - name: Upload built JAR
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifact
-          path: target/*.jar
+          name: instance-sync-jar
+          path: jar/InstanceSync.jar
